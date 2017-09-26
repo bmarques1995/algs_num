@@ -1,35 +1,46 @@
-function [x,iter,converge] = pegaso (f,a,b,tol,repMax)
-    x = 1/0.0;
-    y = a;
+/*
+* Bruno Silva Marques
+* 2015116316
+* TN2
+*/
+function [x,iter,converge] = pegaso (f,a,b,tol,iterMax)
+    x = a;
     Fa = eval(f);
-    y = b;
+    x = b;
     Fb = eval(f);
-    for(iter=0:1:repMax)
-        DeltaX = (Fb*(b-a)/(Fb-Fa));
-        x = b + DeltaX;
-        y = x;
-        Fx = eval(f);
-        if((DeltaX<=tol)&(abs(Fx)<=tol))
-            return x,iter,%T;
+    converge=%F;
+    for(iter=0:1:iterMax)
+        if(Fa == Fb)
+            a = (a + b)/2;
+            x = a;
+            Fa = eval(f);
         end
-        if(Fx*Fb)<0
+        DeltaX = (-1.0)*(Fb*((b-a)/(Fb-Fa)));
+        x = b + DeltaX;
+        Fx = eval(f);
+        if((abs(DeltaX)<=tol)&(abs(Fx)<=tol))
+            converge=%T;
+            break;
+        end
+        if((Fx*Fb)<0)
             a = b;
             Fa = Fb;
         else
             Fa = (Fa*Fb)/(Fb+Fx);
         end
+        b = x;
+        Fb = Fx;
     end
-    return x,iter,%F;
 endfunction
-
-f = input("Digite uma função (com o termo independente = y):\n-->","s");
+f = input("Digite uma função (com o termo independente = x):\n-->","s");
 a = input("Digite um ponto: ");
 b = input("Digite outro ponto: ");
 tol = input("Digite a tolerância do valor: ");
-/*
-repe = input("Digite o número maximo de iterações: ");
-repMax = uint32(repe);
-*/
-[x1,iter1,converge1] = pegaso(f,a,b,tol,50)
-printf("%.2lf %u %u",x1,iter1,converge1);
-
+iterMax = input("Digite o número maximo de iterações: ");
+[x,iter,converge] = pegaso(f,a,b,tol,iterMax);
+printf("%.3lf %u ",x,iter);
+if(converge)
+    printf("convergiu\n");
+else
+    printf("não convergiu\n");
+end
