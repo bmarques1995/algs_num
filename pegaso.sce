@@ -38,7 +38,7 @@ b = input("Digite outro ponto: ");
 tol = input("Digite a tolerância do valor: ");
 iterMax = input("Digite o número maximo de iterações: ");
 [x,iter,converge] = pegaso(f,a,b,tol,iterMax);
-printf("%.3lf %u ",x,iter);
+printf("\n%.3lf %u ",x,iter);
 if(converge)
     printf("convergiu\n");
 else
